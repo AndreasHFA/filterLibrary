@@ -3,11 +3,12 @@
 
 /*
  ============================================================================
- Name        : tryouts.c
- Author      :
+ Name        : libFilter.c
+ Author      : Franz Flasch
  Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
+ Copyright   :
+ Description : Filtering Library wich supports reading of automatically generated
+ 	 	 	   headerfiles e.g. from Matlab.
  ============================================================================
  */
 
