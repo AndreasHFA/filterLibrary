@@ -19,7 +19,7 @@ noinst_PROGRAMS=filterlib_test
 filterlib_test_SOURCES= filterlib_test.c
 
 # Linker options for a.out
-filterlib_test_LDFLAGS = $(top_srcdir)/libFilter/libFilter.la
+filterlib_test_LDFLAGS = $(top_srcdir)/libFilter/libFilterIIR.la
 
 # Compiler options for a.out
 filterlib_test_CPPFLAGS = -I$(top_srcdir)/include

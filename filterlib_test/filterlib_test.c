@@ -26,7 +26,7 @@ int main(void)
 
 	Filter_SOS_DirForm2_t myFilter[FILTER_SECTIONS];
 
-	Filter_InitSections(&myFilter[0], &NUM[0][0], &DEN[0][0], FILTER_SECTIONS);
+	Filter_IIRDirForm2_InitSections(&myFilter[0], &NUM[0][0], &DEN[0][0], FILTER_SECTIONS);
 
 //	for(i=0;i<7;i++)
 //	{
@@ -36,8 +36,10 @@ int main(void)
 
 	for(i=0;i<100;i++)
 	{
-		printf("%f\n", Filter_ProcessCombinedSections(&myFilter[0], 1, FILTER_SECTIONS));
+		printf("%f\n", Filter_IIRDirForm2_ProcessCombinedSections(&myFilter[0], 1, FILTER_SECTIONS));
 	}
+
+	Filter_FIRDirForm_test();
 
 	return EXIT_SUCCESS;
 }

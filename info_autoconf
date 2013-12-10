@@ -1,0 +1,2 @@
+# use this command to reconfigure the library, or just try it if it complains when compiling
+autoreconf -fvi

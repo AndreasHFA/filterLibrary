@@ -14,25 +14,28 @@ typedef struct Filter_SOS_DirForm2_s
 
 }Filter_SOS_DirForm2_t;
 
-void Filter_InitGetCoeffFromMatlabForm(Filter_SOS_DirForm2_t *pFilter,
+void Filter_IIRDirForm2_GetCoeffFromMatlabForm(Filter_SOS_DirForm2_t *pFilter,
 								   	   const double *NUM,
 								   	   const double *DEN,
 								   	   unsigned int sectionNr,
 								   	   unsigned int lastSection);
 
-void Filter_InitSections(Filter_SOS_DirForm2_t *pFilter,
+void Filter_IIRDirForm2_InitSections(Filter_SOS_DirForm2_t *pFilter,
 						 const double *numerator,
 						 const double *denominator,
 						 unsigned int nrSections);
 
-double Filter_ProcessOneSection(Filter_SOS_DirForm2_t *pFilter,
+double Filter_IIRDirForm2_ProcessOneSection(Filter_SOS_DirForm2_t *pFilter,
 								double input);
 
-double Filter_ProcessCombinedSections(Filter_SOS_DirForm2_t *pFilter,
+double Filter_IIRDirForm2_ProcessCombinedSections(Filter_SOS_DirForm2_t *pFilter,
 									  double input,
 									  unsigned int nrSections);
 
-void Filter_PrintSOS(Filter_SOS_DirForm2_t *pFilter);
+void Filter_IIRDirForm2_Print(Filter_SOS_DirForm2_t *pFilter);
+
+
+void Filter_FIRDirForm_test(void);
 
 
 

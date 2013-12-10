@@ -1,6 +1,3 @@
-#include "libFilter.h"
-
-
 /*
  ============================================================================
  Name        : libFilter.c
@@ -12,11 +9,12 @@
  ============================================================================
  */
 
+#include "libFilter.h"
 #include <stdio.h>
 #include <stdlib.h>
 
 
-void Filter_InitGetCoeffFromMatlabForm(Filter_SOS_DirForm2_t *pFilter,
+void Filter_IIRDirForm2_GetCoeffFromMatlabForm(Filter_SOS_DirForm2_t *pFilter,
 								   	   const double *NUM,
 								   	   const double *DEN,
 								   	   unsigned int sectionNr,
@@ -46,7 +44,7 @@ void Filter_InitGetCoeffFromMatlabForm(Filter_SOS_DirForm2_t *pFilter,
 	pFilter->w[0] = pFilter->w[1] = pFilter->w[2] = 0;
 }
 
-void Filter_InitSections(Filter_SOS_DirForm2_t *pFilter,
+void Filter_IIRDirForm2_InitSections(Filter_SOS_DirForm2_t *pFilter,
 						 const double *numerator,
 						 const double *denominator,
 						 unsigned int nrSections)
@@ -55,12 +53,12 @@ void Filter_InitSections(Filter_SOS_DirForm2_t *pFilter,
 
 	for(i=0;i<(nrSections-1);i++)
 	{
-		Filter_InitGetCoeffFromMatlabForm(&pFilter[i], &numerator[0], &denominator[0], i, 0);
+		Filter_IIRDirForm2_GetCoeffFromMatlabForm(&pFilter[i], &numerator[0], &denominator[0], i, 0);
 	}
-	Filter_InitGetCoeffFromMatlabForm(&pFilter[i], &numerator[0], &denominator[0], i, 1);
+	Filter_IIRDirForm2_GetCoeffFromMatlabForm(&pFilter[i], &numerator[0], &denominator[0], i, 1);
 }
 
-double Filter_ProcessOneSection(Filter_SOS_DirForm2_t *pFilter, double input)
+double Filter_IIRDirForm2_ProcessOneSection(Filter_SOS_DirForm2_t *pFilter, double input)
 {
 	/* Shift values */
 	pFilter->w[2] = pFilter->w[1];
@@ -70,21 +68,21 @@ double Filter_ProcessOneSection(Filter_SOS_DirForm2_t *pFilter, double input)
 	return pFilter->outputGain*((pFilter->b[0]*pFilter->w[0]) + (pFilter->b[1]*pFilter->w[1]) + (pFilter->b[2]*pFilter->w[2]));
 }
 
-double Filter_ProcessCombinedSections(Filter_SOS_DirForm2_t *pFilter, double input, unsigned int nrSections)
+double Filter_IIRDirForm2_ProcessCombinedSections(Filter_SOS_DirForm2_t *pFilter, double input, unsigned int nrSections)
 {
 	double tmpValue = input;
 	unsigned int i = 0;
 
-	tmpValue = Filter_ProcessOneSection(&pFilter[0], tmpValue);
+	tmpValue = Filter_IIRDirForm2_ProcessOneSection(&pFilter[0], tmpValue);
 	for(i=1;i<(nrSections);i++)
 	{
-		tmpValue = Filter_ProcessOneSection(&pFilter[i], tmpValue);
+		tmpValue = Filter_IIRDirForm2_ProcessOneSection(&pFilter[i], tmpValue);
 	}
 
 	return tmpValue;
 }
 
-void Filter_PrintSOS(Filter_SOS_DirForm2_t *pFilter)
+void Filter_IIRDirForm2_Print(Filter_SOS_DirForm2_t *pFilter)
 {
 	/* Test print */
 	printf("Numerator:\n");
