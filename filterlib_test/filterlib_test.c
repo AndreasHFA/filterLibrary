@@ -16,8 +16,58 @@
 #include "libFilter.h"
 #include "matLabFilter.h"
 #include "stdlib.h"
+#include "stdint.h"
 
 #define FILTER_SECTIONS ((MWSPT_NSEC-1)/2)
+
+char *buffer;
+
+
+double readWavFile(char *filePath, uint32_t index)
+{
+    long lsize;
+    int result;
+    double retVal=0;
+
+    int16_t *pWav=NULL;
+
+    FILE *wavFile;
+
+    wavFile = fopen("/home/franz/Desktop/test.wav", "rb");
+
+    if(wavFile == NULL)
+    {
+        printf("Error\n");
+        return 1;
+    }
+
+    fseek(wavFile, 0 , SEEK_END);
+    lsize = ftell(wavFile);
+    rewind(wavFile);
+
+    // allocate memory to contain the whole file:
+    buffer = (char*) malloc (sizeof(char)*lsize);
+    if (buffer == NULL) {fputs ("Memory error",stderr); exit (2);}
+
+    // copy the file into the buffer:
+    result = fread (buffer,1,lsize,wavFile);
+    if (result != lsize) {fputs ("Reading error",stderr); exit (3);}
+
+    pWav=(int16_t *)&buffer[0];
+
+    if(index < lsize)
+    {
+        retVal=(double)pWav[index];
+    }
+
+    /* the whole file is now loaded in the memory buffer. */
+
+    // terminate
+    fclose (wavFile);
+    free (buffer);
+    return retVal;
+}
+
 
 
 int main(void)
@@ -37,18 +87,24 @@ int main(void)
 //		Filter_PrintSOS(&myFilter[i]);
 //	}
 
-	for(i=0;i<100;i++)
-	{
-		printf("%f\n", Filter_IIRDirForm2_ProcessCombinedSections(&myFilter[0], 1, FILTER_SECTIONS));
-	}
+//	for(i=0;i<100;i++)
+//	{
+//		printf("%f\n", Filter_IIRDirForm2_ProcessCombinedSections(&myFilter[0], 1, FILTER_SECTIONS));
+//	}
+//
+//	Filter_FIRDirForm_test();
+//
+//	printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 1));
+//
+//    for(i=0;i<10;i++)
+//    {
+//        printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 0));
+//    }
 
-	Filter_FIRDirForm_test();
 
-	printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 1));
-
-    for(i=0;i<10;i++)
+    for(i=0;i<500;i++)
     {
-        printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 0));
+        printf("%14f %14f %6d\n", readWavFile("d", i+100), Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, readWavFile("d", i+100)), i);
     }
 
 	return EXIT_SUCCESS;
