@@ -23,6 +23,9 @@
 int main(void)
 {
 	int i = 0;
+	double FIRstorages[BL];
+
+	memset(&FIRstorages, 0, sizeof(double)*BL);
 
 	Filter_SOS_DirForm2_t myFilter[FILTER_SECTIONS];
 
@@ -40,6 +43,13 @@ int main(void)
 	}
 
 	Filter_FIRDirForm_test();
+
+	printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 1));
+
+    for(i=0;i<10;i++)
+    {
+        printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 0));
+    }
 
 	return EXIT_SUCCESS;
 }

@@ -21,22 +21,24 @@ void Filter_IIRDirForm2_GetCoeffFromMatlabForm(Filter_SOS_DirForm2_t *pFilter,
 								   	   unsigned int lastSection);
 
 void Filter_IIRDirForm2_InitSections(Filter_SOS_DirForm2_t *pFilter,
-						 const double *numerator,
-						 const double *denominator,
-						 unsigned int nrSections);
+						 	 	 	 const double *numerator,
+						 	 	 	 const double *denominator,
+						 	 	 	 unsigned int nrSections);
 
 double Filter_IIRDirForm2_ProcessOneSection(Filter_SOS_DirForm2_t *pFilter,
-								double input);
+											double input);
 
 double Filter_IIRDirForm2_ProcessCombinedSections(Filter_SOS_DirForm2_t *pFilter,
-									  double input,
-									  unsigned int nrSections);
+									  	  	  	  double input,
+									  	  	  	  unsigned int nrSections);
 
 void Filter_IIRDirForm2_Print(Filter_SOS_DirForm2_t *pFilter);
 
 
 void Filter_FIRDirForm_test(void);
 
-
-
+double Filter_FIRDirForm_ProcessFilter(const double *pCoeffs,
+                                       unsigned int nrCoeffs,
+                                       double *storages,
+                                       double input);
 #endif
