@@ -41,4 +41,10 @@ double Filter_FIRDirForm_ProcessFilter(const double *pCoeffs,
                                        unsigned int nrCoeffs,
                                        double *storages,
                                        double input);
+
+double Filter_FIRDirForm_ProcessFilterFast(const double *pCoeffs,
+                                 unsigned int nrCoeffs,
+                                 double *storages,
+                                 double input);
+
 #endif

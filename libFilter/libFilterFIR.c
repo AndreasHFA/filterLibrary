@@ -34,3 +34,41 @@ double Filter_FIRDirForm_ProcessFilter(const double *pCoeffs,
 	return outPut;
 }
 
+double Filter_FIRDirForm_ProcessFilterFast(const double *pCoeffs,
+                                 unsigned int nrCoeffs,
+                                 double *storages,
+                                 double input)
+{
+   static int count = 0;
+   int i = 0;
+   int forwardCnt = 0;
+   int backwardCnt = 0;
+   double outPut = 0;
+
+   if(count>=nrCoeffs)
+   {
+      count=0;
+   }
+
+   forwardCnt=(nrCoeffs-1)-count;
+   backwardCnt=count;
+
+   storages[count] = input;
+
+   /* Calculate the first value by hand */
+   outPut += storages[count]*pCoeffs[0];
+
+   for(i=0;i<backwardCnt;i++)
+   {
+      outPut += storages[(count-1)-i]*pCoeffs[(nrCoeffs-2)-i];
+   }
+
+   for(i=1;i<forwardCnt;i++)
+   {
+      outPut += storages[count+i]*pCoeffs[i];
+   }
+
+   count++;
+   return outPut;
+}
+

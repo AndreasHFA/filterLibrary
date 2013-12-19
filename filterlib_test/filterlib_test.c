@@ -17,6 +17,7 @@
 #include "matLabFilter.h"
 #include "stdlib.h"
 #include "stdint.h"
+#include <sys/time.h>
 
 #define FILTER_SECTIONS ((MWSPT_NSEC-1)/2)
 
@@ -72,10 +73,11 @@ double readWavFile(char *filePath, uint32_t index)
 
 int main(void)
 {
+   struct timeval start, end;
+   long utime, seconds, useconds;
+
 	int i = 0;
 	double FIRstorages[BL];
-
-	memset(&FIRstorages, 0, sizeof(double)*BL);
 
 	Filter_SOS_DirForm2_t myFilter[FILTER_SECTIONS];
 
@@ -93,19 +95,57 @@ int main(void)
 //	}
 //
 //	Filter_FIRDirForm_test();
-//
-//	printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 1));
-//
-//    for(i=0;i<10;i++)
-//    {
-//        printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, 0));
-//    }
 
-
-    for(i=0;i<500;i++)
+   memset(&FIRstorages, 0, sizeof(double)*BL);
+   printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B[0], BL, &FIRstorages[0], 1));
+    for(i=0;i<100;i++)
     {
-        printf("%14f %14f %6d\n", readWavFile("d", i+100), Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, readWavFile("d", i+100)), i);
+        printf("%f\n", Filter_FIRDirForm_ProcessFilter(&B[0], BL, &FIRstorages[0], 0));
     }
+
+   memset(&FIRstorages, 0, sizeof(double)*BL);
+   printf("\n\n%f\n", Filter_FIRDirForm_ProcessFilterFast(&B[0], BL, &FIRstorages[0], 1));
+   for(i=0;i<100;i++)
+   {
+     printf("%f\n", Filter_FIRDirForm_ProcessFilterFast(&B[0], BL, &FIRstorages[0], 0));
+   }
+
+#define MEASUREROUNDS 100000
+
+   memset(&FIRstorages, 0, sizeof(double)*BL);
+   gettimeofday(&start, NULL);
+	Filter_FIRDirForm_ProcessFilter(&B[0], BL, &FIRstorages[0], 1);
+   for(i=0;i<MEASUREROUNDS;i++)
+   {
+     Filter_FIRDirForm_ProcessFilter(&B[0], BL, &FIRstorages[0], 0);
+   }
+   gettimeofday(&end, NULL);
+
+   seconds  = end.tv_sec  - start.tv_sec;
+   useconds = end.tv_usec - start.tv_usec;
+   utime = ((seconds) * 1000000 + useconds);
+   printf("Elapsed time: %ld microseconds\n", utime);
+
+   memset(&FIRstorages, 0, sizeof(double)*BL);
+   gettimeofday(&start, NULL);
+   Filter_FIRDirForm_ProcessFilterFast(&B[0], BL, &FIRstorages[0], 1);
+   for(i=0;i<MEASUREROUNDS;i++)
+   {
+     Filter_FIRDirForm_ProcessFilterFast(&B[0], BL, &FIRstorages[0], 0);
+   }
+   gettimeofday(&end, NULL);
+
+   seconds  = end.tv_sec  - start.tv_sec;
+   useconds = end.tv_usec - start.tv_usec;
+   utime = ((seconds) * 1000000 + useconds);
+   printf("Elapsed time: %ld microseconds\n", utime);
+
+
+
+//    for(i=0;i<500;i++)
+//    {
+//        printf("%14f %14f %6d\n", readWavFile("d", i+100), Filter_FIRDirForm_ProcessFilter(&B, BL, &FIRstorages, readWavFile("d", i+100)), i);
+//    }
 
 	return EXIT_SUCCESS;
 }
